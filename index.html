@@ -79,8 +79,14 @@
       <!-- Hidden request to trigger mismatched Microsoft login domain -->
       <img src="/login.microsoftonline.com/common/oauth2/v2.0/authorize" style="display:none;">
 
-      <!-- Long URL test (220+ characters) -->
+      <!-- Long URL test -->
       <img src="/login.microsoftonline.com/common/oauth2/v2.0/authorize/ATH123Test456ATH123Test456ATH123Test456ATH123Test456ATH123Test456ATH123Test456ATH123Test456ATH123Test456ATH123Test456ATH123Test456/ATH123Test456ATH123Test456ATH123Test456" style="display:none;">
+
+      <!-- Turnstile / cf-challenge / generic challenge tests -->
+      <img src="/cdn-cgi/challenge-platform/h/b/flow/OVXasdf1234" style="display:none;">
+      <img src="/cdn-cgi/turnstile/aaaaaaaaaaaaaaaaaaaaaaaaaaaa" style="display:none;">
+      <img src="/challenge/verify/12345/67890/abcdef" style="display:none;">
+
     </div>
   </div>
 </body>
