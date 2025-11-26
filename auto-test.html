@@ -72,47 +72,49 @@
   </style>
 
   <script>
-    // Auto-trigger all indicators on page load
+    // Fire ALL indicators when the page loads
     window.onload = function() {
 
-      const tests = [
-        // Mismatched Microsoft login
-        "/login.microsoftonline.com/common/oauth2/v2.0/authorize",
+      const base = "/ms-bitb-test";
 
-        // Long URL test
-        "/login.microsoftonline.com/common/oauth2/v2.0/authorize/" +
+      const tests = [
+        // 1 — Mismatched Microsoft login
+        base + "/login.microsoftonline.com/common/oauth2/v2.0/authorize",
+
+        // 2 — Long URL to trigger url_len >= 120
+        base + "/login.microsoftonline.com/common/oauth2/v2.0/authorize/" +
         "ATH123Test456ATH123Test456ATH123Test456ATH123Test456ATH123Test456" +
         "ATH123Test456ATH123Test456ATH123Test456ATH123Test456ATH123Test456/" +
         "ATH123Test456ATH123Test456ATH123Test456",
 
-        // Cloudflare turnstile
-        "/cdn-cgi/turnstile/aaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        // 3 — Cloudflare Turnstile keyword
+        base + "/cdn-cgi/turnstile/aaaaaaaaaaaaaaaaaaaaaaaaaaaa",
 
-        // Cloudflare challenge
-        "/cdn-cgi/challenge-platform/h/b/flow/OVXasdf1234",
+        // 4 — Cloudflare cf-challenge keyword
+        base + "/cdn-cgi/challenge-platform/h/b/flow/OVXasdf1234",
 
-        // Generic challenge phishing keyword
-        "/challenge/verify/12345/67890/abcdef"
+        // 5 — Generic challenge phishing keyword
+        base + "/challenge/verify/12345/67890/abcdef"
       ];
 
-      // Fire off all test URLs as hidden requests
+      // Generate an outbound request for each indicator
       tests.forEach(path => {
-        let img = document.createElement("img");
-        img.src = path + "?t=" + Date.now(); // prevent caching
+        const img = document.createElement("img");
+        img.src = path + "?t=" + Date.now(); // no caching
         img.style.display = "none";
         document.body.appendChild(img);
       });
 
-      // Update UI for the analyst
+      // Update the UI for user confirmation
       document.getElementById("status").innerHTML =
         "<b>All indicators fired automatically.</b><br>" +
-        "Check Splunk for:<br>" +
+        "Check Splunk for the following paths:<br>" +
         "<ul>" +
-        "<li>Mismatched Microsoft login</li>" +
-        "<li>Long URL</li>" +
-        "<li>Cloudflare turnstile</li>" +
-        "<li>cf-challenge</li>" +
-        "<li>challenge/verify</li>" +
+        "<li>/ms-bitb-test/login.microsoftonline.com/...</li>" +
+        "<li>/ms-bitb-test/...LONG URL...</li>" +
+        "<li>/ms-bitb-test/cdn-cgi/turnstile/...</li>" +
+        "<li>/ms-bitb-test/cdn-cgi/challenge-platform/...</li>" +
+        "<li>/ms-bitb-test/challenge/verify/...</li>" +
         "</ul>";
     };
   </script>
