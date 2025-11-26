@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ATH Full Auto-Test</title>
+
+  <style>
+    body {
+      background: #f3f3f3;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .bitb-window {
+      width: 420px;
+      border: 1px solid #afafaf;
+      border-radius: 6px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.25);
+      background: white;
+    }
+
+    .bitb-titlebar {
+      height: 32px;
+      background: #e8e8e8;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      border-bottom: 1px solid #ccc;
+      font-size: 12px;
+      color: #555;
+    }
+
+    .bitb-content {
+      padding: 30px;
+    }
+
+    .logo {
+      font-size: 24px;
+      color: #0067b8;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      font-size: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #0067b8;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #status {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #333;
+      line-height: 1.4;
+    }
+  </style>
+
+  <script>
+    // Auto-trigger all indicators on page load
+    window.onload = function() {
+
+      const tests = [
+        // Mismatched Microsoft login
+        "/login.microsoftonline.com/common/oauth2/v2.0/authorize",
+
+        // Long URL test
+        "/login.microsoftonline.com/common/oauth2/v2.0/authorize/" +
+        "ATH123Test456ATH123Test456ATH123Test456ATH123Test456ATH123Test456" +
+        "ATH123Test456ATH123Test456ATH123Test456ATH123Test456ATH123Test456/" +
+        "ATH123Test456ATH123Test456ATH123Test456",
+
+        // Cloudflare turnstile
+        "/cdn-cgi/turnstile/aaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+
+        // Cloudflare challenge
+        "/cdn-cgi/challenge-platform/h/b/flow/OVXasdf1234",
+
+        // Generic challenge phishing keyword
+        "/challenge/verify/12345/67890/abcdef"
+      ];
+
+      // Fire off all test URLs as hidden requests
+      tests.forEach(path => {
+        let img = document.createElement("img");
+        img.src = path + "?t=" + Date.now(); // prevent caching
+        img.style.display = "none";
+        document.body.appendChild(img);
+      });
+
+      // Update UI for the analyst
+      document.getElementById("status").innerHTML =
+        "<b>All indicators fired automatically.</b><br>" +
+        "Check Splunk for:<br>" +
+        "<ul>" +
+        "<li>Mismatched Microsoft login</li>" +
+        "<li>Long URL</li>" +
+        "<li>Cloudflare turnstile</li>" +
+        "<li>cf-challenge</li>" +
+        "<li>challenge/verify</li>" +
+        "</ul>";
+    };
+  </script>
+
+</head>
+
+<body>
+  <div class="bitb-window">
+    <div class="bitb-titlebar">
+      <img src="https://www.microsoft.com/favicon.ico" width="16" style="margin-right:6px;">
+      Sign in to your account — login.microsoftonline.com
+    </div>
+
+    <div class="bitb-content">
+      <div class="logo">Microsoft</div>
+      <input type="text" placeholder="Email, phone, or Skype">
+      <button disabled>Next</button>
+
+      <div id="status"></div>
+    </div>
+  </div>
+</body>
+</html>
